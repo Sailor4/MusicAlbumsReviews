@@ -1,0 +1,73 @@
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth import get_user_model
+
+UserModel = get_user_model()
+
+NAME_MAX_LENGTH = 100
+TITLE_MAX_LENGTH = 150
+FORMAT_MAX_LENGTH = 10
+MIN_RELEASE_YEAR = 1900
+MAX_RELEASE_YEAR = 2026
+
+
+class Artist(models.Model):
+    name = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        unique=True
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Album(models.Model):
+    VINYL = 'Vinyl'
+    CD = 'CD'
+    SACD = 'SACD'
+
+    FORMAT_CHOICES = [
+        (VINYL, 'Vinyl'),
+        (CD, 'CD'),
+        (SACD, 'SACD'),
+    ]
+
+    title = models.CharField(
+        max_length=TITLE_MAX_LENGTH
+    )
+
+    artist = models.ForeignKey(
+        Artist,
+        on_delete=models.CASCADE,
+        related_name='albums'
+    )
+
+    release_year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(MIN_RELEASE_YEAR),
+            MaxValueValidator(MAX_RELEASE_YEAR)
+        ]
+    )
+
+    music_format = models.CharField(
+        max_length=FORMAT_MAX_LENGTH,
+        choices=FORMAT_CHOICES
+    )
+
+    image_url = models.URLField(
+        blank=True,
+        null=True
+    )
+
+    is_approved = models.BooleanField(
+        default=False
+    )
+
+    added_by = models.ForeignKey(
+        UserModel,
+        on_delete=models.SET_NULL,
+        null=True
+    )
+
+    def __str__(self):
+        return f"{self.title} by {self.artist.name} ({self.music_format})"
