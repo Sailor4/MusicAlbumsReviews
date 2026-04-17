@@ -9,6 +9,7 @@ TITLE_MAX_LENGTH = 150
 FORMAT_MAX_LENGTH = 10
 MIN_RELEASE_YEAR = 1900
 MAX_RELEASE_YEAR = 2026
+SONG_NAME_MAX_LENGTH = 100
 
 
 class Artist(models.Model):
@@ -71,3 +72,22 @@ class Album(models.Model):
 
     def __str__(self):
         return f"{self.title} by {self.artist.name} ({self.music_format})"
+
+
+class Song(models.Model):
+    title = models.CharField(
+        max_length=SONG_NAME_MAX_LENGTH
+    )
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name='songs'
+    )
+    duration = models.DurationField(
+        help_text="Format: MM:SS",
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.title} ({self.album.title})"
