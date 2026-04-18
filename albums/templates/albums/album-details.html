@@ -3,6 +3,13 @@
 {% block content %}
 <div class="album-details">
     <h1>{{ album.title }}</h1>
+    <p style="font-size: 1.2rem;">
+    <strong>Rating:</strong>
+    <span style="color: #f39c12;">
+        {{ average_rating }} ★
+    </span>
+    <small style="color: #888;">({{ reviews_count }} reviews)</small>
+    </p>
     <div style="display: flex; gap: 30px;">
         <div>
             {% if album.image_url %}

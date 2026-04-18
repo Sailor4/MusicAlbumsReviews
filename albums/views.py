@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Album, Review
 from .forms import AlbumCreateForm, ReviewCreateForm
 from django.shortcuts import get_object_or_404
+from django.db.models import Avg, Count
 
 
 class AlbumCreateView(LoginRequiredMixin, CreateView):
@@ -24,6 +25,16 @@ class AlbumDetailView(DetailView):
     model = Album
     template_name = 'albums/album-details.html'
     context_object_name = 'album'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reviews = self.object.reviews.all()
+        average = reviews.aggregate(Avg('rating'))['rating__avg']
+        count = reviews.count()
+
+        context['average_rating'] = round(average, 1) if average else "No ratings"
+        context['reviews_count'] = count
+        return context
 
 
 class ReviewCreateView(LoginRequiredMixin, CreateView):
