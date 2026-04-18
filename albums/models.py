@@ -19,6 +19,13 @@ class Artist(models.Model):
         unique=True
     )
 
+    is_approved = models.BooleanField(default=False)
+    added_by = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        related_name='added_artists',
+    )
+
     def __str__(self):
         return self.name
 
@@ -131,3 +138,5 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review for {self.album.title} by {self.user.username}"
+
+

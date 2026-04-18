@@ -1,8 +1,8 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Album, Review
-from .forms import AlbumCreateForm, ReviewCreateForm
+from .models import Album, Review, Artist
+from .forms import AlbumCreateForm, ReviewCreateForm, ArtistCreateForm
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
 
@@ -87,3 +87,15 @@ class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         album = self.get_object()
         return self.request.user == album.added_by
+
+
+
+class ArtistCreateView(LoginRequiredMixin, CreateView):
+    model = Artist
+    form_class = ArtistCreateForm
+    template_name = 'albums/artist-add.html'
+    success_url = reverse_lazy('album-add')
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)

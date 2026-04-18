@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Suggest a New Artist</h1>
+    <p>After you submit, an admin must approve the artist before they appear in the list.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Submit Artist</button>
+    </form>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Album, Review
+from .models import Album, Review, Artist
 
 
 class AlbumCreateForm(forms.ModelForm):
@@ -20,6 +20,12 @@ class AlbumCreateForm(forms.ModelForm):
             'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/image.jpg'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        artist_field = self.fields.get('artist')
+        if artist_field:
+            artist_field.queryset = Artist.objects.filter(is_approved=True)
+
 
 class ReviewCreateForm(forms.ModelForm):
     class Meta:
@@ -31,3 +37,9 @@ class ReviewCreateForm(forms.ModelForm):
                 'rows': 4
             }),
         }
+
+
+class ArtistCreateForm(forms.ModelForm):
+    class Meta:
+        model = Artist
+        fields = ['name']
