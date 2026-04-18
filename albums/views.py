@@ -1,10 +1,10 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Album, Review
 from .forms import AlbumCreateForm, ReviewCreateForm
 from django.shortcuts import get_object_or_404
-from django.db.models import Avg, Count
+from django.db.models import Avg
 
 
 class AlbumCreateView(LoginRequiredMixin, CreateView):
@@ -18,8 +18,10 @@ class AlbumCreateView(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
+
 from django.views.generic import DetailView
 from .models import Album
+
 
 class AlbumDetailView(DetailView):
     model = Album
@@ -56,3 +58,32 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('album-details', kwargs={'pk': self.kwargs.get('pk')})
+
+
+class AlbumEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Album
+    form_class = AlbumCreateForm
+    template_name = 'albums/album-edit.html'
+
+    def get_success_url(self):
+        return reverse_lazy('album-details', kwargs={'pk': self.object.pk})
+
+    def test_func(self):
+        album = self.get_object()
+        is_owner = self.request.user == album.added_by
+        is_not_approved = not album.is_approved
+
+        return is_owner and is_not_approved
+
+    def get_success_url(self):
+        return reverse_lazy('album-details', kwargs={'pk': self.object.pk})
+
+
+class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Album
+    template_name = 'albums/album-delete.html'
+    success_url = reverse_lazy('my-albums')
+
+    def test_func(self):
+        album = self.get_object()
+        return self.request.user == album.added_by

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>My Submitted Albums</h1>
+    <p>Here you can track the status of the albums you've suggested.</p>
+    <hr>
+
+    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="background: #eee;">
+                <th style="padding: 10px;">Album Title</th>
+                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for album in my_albums %}
+                <tr>
+                    <td style="padding: 10px;">{{ album.title }}</td>
+                    <td style="padding: 10px;">
+                        {% if album.is_approved %}
+                            <span style="color: green;">✅ Approved</span>
+                        {% else %}
+                            <span style="color: orange;">⏳ Pending Review</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 10px;">
+                        <a href="{% url 'album-details' album.pk %}">View Details</a>
+                    </td>
+                    <td style="padding: 10px;">
+                        <a href="{% url 'album-details' album.pk %}">View</a>
+                        {% if not album.is_approved %}
+                            | <a href="{% url 'album-edit' album.pk %}" style="color: blue;">Edit</a>
+                            | <a href="{% url 'album-delete' album.pk %}" style="color: red;">Delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" style="padding: 20px; text-align: center;">
+                        You haven't suggested any albums yet. 
+                        <a href="{% url 'album-add' %}">Add one now!</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
