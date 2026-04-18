@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="album-details">
+    <h1>{{ album.title }}</h1>
+    <div style="display: flex; gap: 30px;">
+        <div>
+            {% if album.image_url %}
+                <img src="{{ album.image_url }}" alt="{{ album.title }}" style="width: 300px; border-radius: 8px;">
+            {% else %}
+                <div style="width: 300px; height: 300px; background: #ddd; display: grid; place-items: center;">No Image</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <p><strong>Artist:</strong> {{ album.artist.name }}</p>
+            <p><strong>Release Year:</strong> {{ album.release_year }}</p>
+            <p><strong>Format:</strong> {{ album.music_format }}</p>
+            <p><strong>Added by:</strong> {{ album.added_by.username }}</p>
+            
+            <hr>
+            <a href="{% url 'home' %}" class="btn">Back to Home</a>
+        </div>
+    </div>
+
+    <hr>
+
+    <a href="{% url 'review-add' album.pk %}" class="btn" style="background: #f39c12; color: white;">
+        + Write a Review
+    </a>
+
+    <h2>User Reviews</h2>
+    <div class="reviews-section">
+        {% for review in album.reviews.all %}
+            <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <p>
+                    <strong>{{ review.user.username }}</strong> 
+                    <span style="color: #f39c12;">({{ review.rating }}/5 ★)</span>
+                </p>
+                <p><em>"{{ review.comment }}"</em></p>
+                <small style="color: #888;">Posted on: {{ review.created_at|date:"d M Y" }}</small>
+            </div>
+        {% empty %}
+            <p>No reviews yet. Be the first to review this album!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

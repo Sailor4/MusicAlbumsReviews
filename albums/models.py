@@ -10,6 +10,7 @@ FORMAT_MAX_LENGTH = 10
 MIN_RELEASE_YEAR = 1900
 MAX_RELEASE_YEAR = 2026
 SONG_NAME_MAX_LENGTH = 100
+COMMENT_MAX_LENGTH = 500
 
 
 class Artist(models.Model):
@@ -91,3 +92,42 @@ class Song(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.album.title})"
+
+
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 - Poor'),
+        (2, '2 - Fair'),
+        (3, '3 - Good'),
+        (4, '4 - Very Good'),
+        (5, '5 - Excellent'),
+    ]
+
+    comment = models.TextField(
+        max_length=COMMENT_MAX_LENGTH,
+        blank=True,
+        null=True
+    )
+
+    rating = models.IntegerField(
+        choices=RATING_CHOICES
+    )
+
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"Review for {self.album.title} by {self.user.username}"

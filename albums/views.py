@@ -1,8 +1,9 @@
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Album
-from .forms import AlbumCreateForm
+from .models import Album, Review
+from .forms import AlbumCreateForm, ReviewCreateForm
+from django.shortcuts import get_object_or_404
 
 
 class AlbumCreateView(LoginRequiredMixin, CreateView):
@@ -23,3 +24,24 @@ class AlbumDetailView(DetailView):
     model = Album
     template_name = 'albums/album-details.html'
     context_object_name = 'album'
+
+
+class ReviewCreateView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'albums/review-add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['album'] = get_object_or_404(Album, pk=self.kwargs.get('pk'))
+        return context
+
+    def form_valid(self, form):
+        album_id = self.kwargs.get('pk')
+        album = get_object_or_404(Album, pk=album_id)
+        form.instance.album = album
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('album-details', kwargs={'pk': self.kwargs.get('pk')})

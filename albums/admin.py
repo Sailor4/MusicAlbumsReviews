@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Artist, Album, Song
+from .models import Artist, Album, Song, Review
 
 
 class SongInline(admin.TabularInline):
@@ -20,3 +20,10 @@ class AlbumAdmin(admin.ModelAdmin):
     search_fields = ('title', 'artist__name')
     list_editable = ('is_approved',)
     inlines = [SongInline]
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('album', 'user', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('album__title', 'user__username')

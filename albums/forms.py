@@ -1,5 +1,5 @@
 from django import forms
-from .models import Album
+from .models import Album, Review
 
 
 class AlbumCreateForm(forms.ModelForm):
@@ -18,4 +18,16 @@ class AlbumCreateForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter album title...'}),
             'image_url': forms.URLInput(attrs={'placeholder': 'https://example.com/image.jpg'}),
+        }
+
+
+class ReviewCreateForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={
+                'placeholder': 'Write a review about this album...',
+                'rows': 4
+            }),
         }
