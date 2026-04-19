@@ -134,3 +134,13 @@ class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('album-details', kwargs={'pk': self.object.album.pk})
+
+class ArtistEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Artist
+    form_class = ArtistCreateForm
+    template_name = 'albums/artist-edit.html'
+    success_url = reverse_lazy('my-albums')
+
+    def test_func(self):
+        artist = self.get_object()
+        return self.request.user == artist.added_by and not artist.is_approved

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Edit Artist: {{ object.name }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Update Name</button>
+        <a href="{% url 'my-albums' %}" class="btn">Cancel</a>
+    </form>
+{% endblock %}
