@@ -33,7 +33,6 @@ class AlbumDetailView(DetailView):
         reviews = self.object.reviews.all()
         average = reviews.aggregate(Avg('rating'))['rating__avg']
         count = reviews.count()
-
         context['average_rating'] = round(average, 1) if average else "No ratings"
         context['reviews_count'] = count
 
