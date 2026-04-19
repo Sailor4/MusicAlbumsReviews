@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Delete Review</h1>
+    <p>Are you sure you want to delete your review for <strong>{{ object.album.title }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="background: red; color: white;">Yes, Delete</button>
+        <a href="{% url 'album-details' object.album.pk %}" class="btn">Cancel</a>
+    </form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Edit your Review for {{ object.album.title }}</h1>
+
+    <p style="color: #666; font-style: italic; margin-top: -15px;">
+        Format: {{ object.album.get_music_format_display }}
+    </p>
+
+    <hr>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Save Changes</button>
+
+        <a href="{% url 'album-details' object.album.pk %}" class="btn">Cancel</a>
+    </form>
+{% endblock %}

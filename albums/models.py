@@ -136,6 +136,11 @@ class Review(models.Model):
         auto_now_add=True
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'album'], name='unique_user_review')
+        ]
+
     def __str__(self):
         return f"Review for {self.album.title} by {self.user.username}"
 

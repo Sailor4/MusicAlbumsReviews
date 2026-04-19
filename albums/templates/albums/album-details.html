@@ -4,12 +4,13 @@
 <div class="album-details">
     <h1>{{ album.title }}</h1>
     <p style="font-size: 1.2rem;">
-    <strong>Rating:</strong>
-    <span style="color: #f39c12;">
-        {{ average_rating }} ★
-    </span>
-    <small style="color: #888;">({{ reviews_count }} reviews)</small>
+        <strong>Rating:</strong>
+        <span style="color: #f39c12;">
+            {{ average_rating }} ★
+        </span>
+        <small style="color: #888;">({{ reviews_count }} reviews)</small>
     </p>
+
     <div style="display: flex; gap: 30px;">
         <div>
             {% if album.image_url %}
@@ -24,7 +25,7 @@
             <p><strong>Release Year:</strong> {{ album.release_year }}</p>
             <p><strong>Format:</strong> {{ album.music_format }}</p>
             <p><strong>Added by:</strong> {{ album.added_by.username }}</p>
-            
+
             <hr>
             <a href="{% url 'home' %}" class="btn">Back to Home</a>
         </div>
@@ -32,19 +33,31 @@
 
     <hr>
 
-    <a href="{% url 'review-add' album.pk %}" class="btn" style="background: #f39c12; color: white;">
-        + Write a Review
-    </a>
+    {% if has_reviewed %}
+        <p style="color: #27ae60; font-weight: bold;">✅ You have already reviewed this album.</p>
+    {% else %}
+        <a href="{% url 'review-add' album.pk %}" class="btn" style="background: #f39c12; color: white;">
+            + Write a Review
+        </a>
+    {% endif %}
 
     <h2>User Reviews</h2>
     <div class="reviews-section">
         {% for review in album.reviews.all %}
             <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
                 <p>
-                    <strong>{{ review.user.username }}</strong> 
+                    <strong>{{ review.user.username }}</strong>
                     <span style="color: #f39c12;">({{ review.rating }}/5 ★)</span>
                 </p>
                 <p><em>"{{ review.comment }}"</em></p>
+
+                {% if review.user == request.user %}
+                    <div style="margin-bottom: 10px;">
+                        <a href="{% url 'review-edit' review.pk %}" style="font-size: 0.85rem; color: #3498db; text-decoration: none;">Edit</a> |
+                        <a href="{% url 'review-delete' review.pk %}" style="font-size: 0.85rem; color: #e74c3c; text-decoration: none;">Delete</a>
+                    </div>
+                {% endif %}
+
                 <small style="color: #888;">Posted on: {{ review.created_at|date:"d M Y" }}</small>
             </div>
         {% empty %}

@@ -3,7 +3,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Album, Review, Artist
 from .forms import AlbumCreateForm, ReviewCreateForm, ArtistCreateForm
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Avg
 
 
@@ -36,6 +36,12 @@ class AlbumDetailView(DetailView):
 
         context['average_rating'] = round(average, 1) if average else "No ratings"
         context['reviews_count'] = count
+
+        if self.request.user.is_authenticated:
+            context['has_reviewed'] = self.object.reviews.filter(user=self.request.user).exists()
+        else:
+            context['has_reviewed'] = False
+
         return context
 
 
@@ -58,6 +64,12 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('album-details', kwargs={'pk': self.kwargs.get('pk')})
+
+    def dispatch(self, request, *args, **kwargs):
+        album = get_object_or_404(Album, pk=self.kwargs.get('pk'))
+        if Review.objects.filter(album=album, user=request.user).exists():
+            return redirect('album-details', pk=album.pk)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class AlbumEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -99,3 +111,27 @@ class ArtistCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.added_by = self.request.user
         return super().form_valid(form)
+
+
+class ReviewEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Review
+    form_class = ReviewCreateForm
+    template_name = 'albums/review-edit.html'
+
+    def test_func(self):
+        review = self.get_object()
+        return self.request.user == review.user
+
+    def get_success_url(self):
+        return reverse_lazy('album-details', kwargs={'pk': self.object.album.pk})
+
+class ReviewDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Review
+    template_name = 'albums/review-delete.html'
+
+    def test_func(self):
+        review = self.get_object()
+        return self.request.user == review.user
+
+    def get_success_url(self):
+        return reverse_lazy('album-details', kwargs={'pk': self.object.album.pk})
