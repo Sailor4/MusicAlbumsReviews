@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="max-width: 400px; margin: 40px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+        <h2>Login to Music Albums Reviews</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn" style="background: #3498db; color: white; width: 100%; padding: 10px;">
+                Login
+            </button>
+        </form>
+    </div>
+{% endblock %}

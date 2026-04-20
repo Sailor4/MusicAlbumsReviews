@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="max-width: 600px; margin: 40px auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h1>Contact Music Albums Reviews</h1>
+        <p>Have a suggestion or found a bug? Drop us a line!</p>
+        <hr>
+        <form method="post" style="display: flex; flex-direction: column; gap: 15px;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn" style="background: #27ae60; color: white; padding: 10px; cursor: pointer;">
+                Send Message
+            </button>
+        </form>
+    </div>
+{% endblock %}

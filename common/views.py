@@ -1,8 +1,11 @@
-from django.views.generic import ListView, TemplateView
-from albums.models import Album, Artist
+from django.views.generic import ListView, TemplateView, FormView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.core.mail import send_mail
 from django.db.models import Q, Avg
-
+from albums.models import Album, Artist
+from .forms import ContactForm, AppUserCreationForm
 
 class HomePageView(TemplateView):
     template_name = 'common/home.html'
@@ -48,3 +51,32 @@ class AlbumSearchView(ListView):
             queryset = queryset.filter(music_format=genre)
 
         return queryset.order_by('-release_year')
+
+
+class ContactView(SuccessMessageMixin, FormView):
+    template_name = 'common/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('home')
+    success_message = "Your message was sent successfully! We will get back to you soon."
+
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        name = form.cleaned_data['name']
+        user_email = form.cleaned_data['email']
+        content = form.cleaned_data['message']
+        full_message = f"Message from {name} ({user_email}):\n\n{content}"
+
+        send_mail(
+            subject=subject,
+            message=full_message,
+            from_email=user_email,
+            recipient_list=['admin@music-albums-reviews.com'],
+            fail_silently=False,
+        )
+        return super().form_valid(form)
+
+class SignUpView(SuccessMessageMixin, CreateView):
+    form_class = AppUserCreationForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('login')
+    success_message = "Your account was created successfully!"
