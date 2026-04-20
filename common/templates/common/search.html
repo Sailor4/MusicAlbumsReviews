@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Search Records</h1>
+
+    <form method="get" style="margin-bottom: 30px; background: #f8f9fa; padding: 20px; border-radius: 8px;">
+        <input type="text" name="search" placeholder="Search by album or artist..."
+               value="{{ request.GET.search }}" style="padding: 10px; width: 300px;">
+
+        <select name="genre" style="padding: 10px;">
+            <option value="">All Formats</option>
+            <option value="VNL" {% if request.GET.genre == 'VNL' %}selected{% endif %}>Vinyl</option>
+            <option value="CD" {% if request.GET.genre == 'CD' %}selected{% endif %}>CD</option>
+            <option value="SCD" {% if request.GET.genre == 'SCD' %}selected{% endif %}>SACD</option>
+        </select>
+
+        <button type="submit" class="btn">Search</button>
+        <a href="{% url 'album-search' %}" class="btn" style="background: #ccc;">Clear</a>
+    </form>
+
+    <div class="album-list">
+        {% for album in albums %}
+            <div class="album-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+                <h3>{{ album.title }}</h3>
+                <p><strong>Artist:</strong> {{ album.artist.name }}</p>
+                <p><strong>Format:</strong> {{ album.get_music_format_display }}</p>
+                <a href="{% url 'album-details' album.pk %}" class="btn">Details</a>
+            </div>
+        {% empty %}
+            <p>No results found matching your criteria.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

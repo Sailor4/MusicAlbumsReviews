@@ -1,27 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Approved Albums</h1>
-    <hr>
-
-    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-        {% for album in albums %}
-            <div style="border: 1px solid #ddd; padding: 10px; width: 200px;">
-                {% if album.image_url %}
-                    <img src="{{ album.image_url }}" alt="{{ album.title }}" style="width: 100%;">
-                {% else %}
-                    <div style="background: #eee; height: 150px; text-align: center; line-height: 150px;">No Image</div>
-                {% endif %}
-
-                <h3>
-                    <a href="{% url 'album-details' album.pk %}">{{ album.title }}</a>
-                </h3>
-                <p><strong>Artist:</strong> {{ album.artist.name }}</p>
-                <p><strong>Year:</strong> {{ album.release_year }}</p>
-                <p><strong>Format:</strong> {{ album.music_format }}</p>
-            </div>
-        {% empty %}
-            <p>No approved albums yet. Be the first to suggest one!</p>
-        {% endfor %}
+    <div style="text-align: center; margin-bottom: 40px;">
+        <h1>Welcome to Music Albums Reviews</h1>
+        <p>Discover, review and manage your favorite vinyl and CDs.</p>
+        <a href="{% url 'album-search' %}" class="btn" style="background: #3498db; color: white; padding: 10px 20px;">
+            🔍 Go to Search
+        </a>
     </div>
+
+    <section>
+        <h2>🔥 Most Popular</h2>
+        <div style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px;">
+            {% for album in popular_albums %}
+                <div class="mini-card" style="min-width: 150px; text-align: center;">
+                    <a href="{% url 'album-details' album.pk %}" style="text-decoration: none; color: inherit;">
+                        {% if album.image_url %}
+                            <img src="{{ album.image_url }}" alt="{{ album.title }}" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                        {% else %}
+                            <div style="width: 150px; height: 150px; background: #eee; border-radius: 8px; display: grid; place-items: center;">No Image</div>
+                        {% endif %}
+                        <p style="margin-top: 10px; font-weight: bold;">{{ album.title }}</p>
+                        <small style="color: #f39c12;">{{ album.avg_rating|default:"0"|floatformat:1 }} ★</small>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <hr style="margin: 40px 0;">
+
+    <section>
+        <h2>🆕 Latest Arrivals</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+            {% for album in latest_albums %}
+                <div class="album-card" style="border: 1px solid #eee; padding: 15px; border-radius: 10px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <h3>{{ album.title }}</h3>
+                    <p><strong>Artist:</strong> {{ album.artist.name }}</p>
+                    <p><strong>Year:</strong> {{ album.release_year }}</p>
+                    <a href="{% url 'album-details' album.pk %}" class="btn">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}
