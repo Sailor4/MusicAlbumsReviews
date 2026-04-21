@@ -1,70 +1,66 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Albums Reviews</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; }
-        nav { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
-        .btn { padding: 5px 10px; text-decoration: none; background: #eee; border: 1px solid #999; }
-        html, body { height: 100%; margin: 0; padding: 0; }
-        body { display: flex; flex-direction: column; padding: 40px; }
-        main { flex: 1; }
-
-        footer {
-            background-color: #f8f9fa;
-            border-top: 1px solid #ccc;
-            padding: 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
-        .footer-links a { margin: 0 10px; color: blue; text-decoration: none; }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <nav>
-    <a href="{% url 'home' %}">Home</a> |
-    <a href="{% url 'album-search' %}">Search</a> |
-    <a href="{% url 'contact' %}">Contact</a> |
+    <header>
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-item">Home</a>
+                <a href="{% url 'album-search' %}" class="nav-item">Search</a>
+                <a href="{% url 'contact' %}" class="nav-item">Contact</a>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'artist-add' %}">Suggest Artist</a> |
-        <a href="{% url 'album-add' %}">Add Album</a> |
-
-        <a href="{% url 'my-albums' %}">My Contributions</a> |
-        <form action="{% url 'logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" style="background:none; border:none; color:blue; cursor:pointer; text-decoration:underline; font-family:inherit; font-size:inherit; padding:0;">
-                Logout ({{ user.username }})
-            </button>
-        </form>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a> |
-        <a href="{% url 'signup' %}">Sign Up</a>
-    {% endif %}
-</nav>
-
-    <main>
-        {% if messages %}
-        <div style="margin: 20px;">
-        {% for message in messages %}
-            <div style="padding: 15px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px;">
-                {{ message }}
+                {% if user.is_authenticated %}
+                    <a href="{% url 'artist-add' %}" class="nav-item">Suggest Artist</a>
+                    <a href="{% url 'album-add' %}" class="nav-item">Add Album</a>
+                    <a href="{% url 'my-albums' %}" class="nav-item">My Contributions</a>
+                {% endif %}
             </div>
-        {% endfor %}
+
+            <div class="auth-section">
+                {% if user.is_authenticated %}
+                    <span class="user-info">Logged as: <strong>{{ user.username }}</strong></span>
+                    <form action="{% url 'logout' %}" method="post" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-item">Login</a>
+                    <a href="{% url 'signup' %}" class="signup-btn">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
         {% endif %}
 
         {% block content %}
         {% endblock %}
     </main>
-    <footer>
-        <div class="footer-links">
-            <a href="{% url 'home' %}">Home</a>
-            <a href="{% url 'album-search' %}">Search</a>
-            <a href="{% url 'contact' %}">Contact Us</a>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="{% url 'home' %}">Home</a>
+                <a href="{% url 'album-search' %}">Search</a>
+                <a href="{% url 'contact' %}">Contact Us</a>
+            </div>
+            <p>&copy; 2026 Music Albums Reviews. SoftUni Django Advanced Project.</p>
         </div>
-        <p>&copy; 2026 Music Albums Reviews. SoftUni Django Advanced Project.</p>
     </footer>
 </body>
 </html>
