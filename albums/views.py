@@ -65,6 +65,8 @@ class ReviewCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('album-details', kwargs={'pk': self.kwargs.get('pk')})
 
     def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
         album = get_object_or_404(Album, pk=self.kwargs.get('pk'))
         if Review.objects.filter(album=album, user=request.user).exists():
             return redirect('album-details', pk=album.pk)

@@ -129,3 +129,4 @@ DEFAULT_FROM_EMAIL = 'support@music-albums-reviews.com'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
