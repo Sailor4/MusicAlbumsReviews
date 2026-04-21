@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin: 100px auto; max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="font-size: 100px; margin-bottom: 20px;">
+        <span>🔌</span><span>💥</span>
+    </div>
+
+    <h1 style="font-size: 3em; color: #2d3436; margin-bottom: 10px;">500 - The Amp Blew Up!</h1>
+
+    <p style="font-size: 1.2em; color: #636e72; line-height: 1.6;">
+        We're experiencing some technical feedback on our side. <br>
+        Our roadies (developers) are already on it to fix the sound.
+    </p>
+
+    <div style="margin-top: 40px;">
+        <a href="{% url 'home' %}" class="btn" style="background: #2ecc71; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; border: none; display: inline-block;">
+            Try Refreshing the Show 🔄
+        </a>
+    </div>
+</div>
+{% endblock %}

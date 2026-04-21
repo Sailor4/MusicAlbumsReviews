@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.db.models import Q, Avg
 from albums.models import Album, Artist
 from .forms import ContactForm, AppUserCreationForm
+from django.shortcuts import render
+
 
 class HomePageView(TemplateView):
     template_name = 'common/home.html'
@@ -75,8 +77,17 @@ class ContactView(SuccessMessageMixin, FormView):
         )
         return super().form_valid(form)
 
+
 class SignUpView(SuccessMessageMixin, CreateView):
     form_class = AppUserCreationForm
     template_name = 'registration/signup.html'
     success_url = reverse_lazy('login')
     success_message = "Your account was created successfully!"
+
+
+def handler404(request, exception):
+    return render(request, '404.html', status=404)
+
+
+def handler500(request):
+    return render(request, '500.html', status=500)

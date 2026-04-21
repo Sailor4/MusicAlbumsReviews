@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin: 100px auto; max-width: 600px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div style="font-size: 100px; margin-bottom: 20px;">
+        <span>💿</span><span style="font-size: 50px; vertical-align: top;">🩹</span>
+    </div>
+
+    <h1 style="font-size: 3em; color: #2d3436; margin-bottom: 10px;">404 - Vinyl Scratched!</h1>
+
+    <p style="font-size: 1.2em; color: #636e72; line-height: 1.6;">
+        The track you are looking for isn't on this record. <br>
+        It might have been moved, deleted, or never existed in our playlist.
+    </p>
+
+    <div style="margin-top: 40px;">
+        <a href="{% url 'home' %}" class="btn" style="background: #e74c3c; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.3s; border: none; display: inline-block;">
+            Return to Main Stage 🎸
+        </a>
+    </div>
+</div>
+{% endblock %}
