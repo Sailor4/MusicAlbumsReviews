@@ -88,9 +88,6 @@ class AlbumEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         return is_owner and is_not_approved
 
-    def get_success_url(self):
-        return reverse_lazy('album-details', kwargs={'pk': self.object.pk})
-
 
 class AlbumDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Album
