@@ -50,3 +50,10 @@ Follow these steps to get the project running locally:
     python manage.py runserver
     ```
 9. ** Access the site: Open http://127.0.0.1:8000/ in your browser.
+
+## 🧪 Running Tests
+The project includes a suite of 20 automated tests covering models, views, and custom security logic. To run them, use:
+
+   ```bash
+    python manage.py test
+   ```
