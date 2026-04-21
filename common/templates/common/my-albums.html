@@ -1,82 +1,90 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>My Submitted Albums</h1>
-    <p>Here you can track the status of the albums you've suggested.</p>
-    <hr>
+<div class="my-contributions-page">
+    <h1 style="color: var(--primary-color);">My Submitted Albums</h1>
+    <p style="color: var(--text-muted); margin-bottom: 20px;">Here you can track the status of the albums you've suggested.</p>
 
-    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-            <tr style="background: #eee;">
-                <th style="padding: 10px;">Album Title</th>
-                <th style="padding: 10px;">Status</th>
-                <th style="padding: 10px;">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for album in my_albums %}
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
                 <tr>
-                    <td style="padding: 10px;">{{ album.title }}</td>
-                    <td style="padding: 10px;">
-                        {% if album.is_approved %}
-                            <span style="color: green;">✅ Approved</span>
-                        {% else %}
-                            <span style="color: orange;">⏳ Pending Album</span>
-                        {% endif %}
-                    </td>
-                    <td style="padding: 10px;">
-                        <a href="{% url 'album-details' album.pk %}">View Details</a>
-                    </td>
-                    <td style="padding: 10px;">
-                        <a href="{% url 'album-details' album.pk %}">View</a>
-                        {% if not album.is_approved %}
-                            | <a href="{% url 'album-edit' album.pk %}" style="color: blue;">Edit</a>
-                            | <a href="{% url 'album-delete' album.pk %}" style="color: red;">Delete</a>
-                        {% endif %}
-                    </td>
+                    <th>Album Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            {% empty %}
+            </thead>
+            <tbody>
+                {% for album in my_albums %}
+                    <tr>
+                        <td><strong>{{ album.title }}</strong></td>
+                        <td>
+                            {% if album.is_approved %}
+                                <span style="color: #2ecc71;">✅ Approved</span>
+                            {% else %}
+                                <span style="color: #f1c40f;">⏳ Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="action-links">
+                            <a href="{% url 'album-details' album.pk %}" class="view-link">View</a>
+                            {% if not album.is_approved %}
+                                | <a href="{% url 'album-edit' album.pk %}" style="color: var(--accent-color);">Edit</a>
+                                | <a href="{% url 'album-delete' album.pk %}" style="color: var(--danger);">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                            You haven't suggested any albums yet.
+                            <a href="{% url 'album-add' %}" style="color: var(--primary-color);">Add one now!</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br><hr style="border: 0; border-top: 1px solid #333; margin: 40px 0;"><br>
+
+    <h2 style="color: var(--primary-color);">My Suggested Artists</h2>
+    <div class="table-container">
+        <table class="custom-table">
+            <thead>
                 <tr>
-                    <td colspan="3" style="padding: 20px; text-align: center;">
-                        You haven't suggested any albums yet. 
-                        <a href="{% url 'album-add' %}">Add one now!</a>
-                    </td>
+                    <th>Artist Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-<br><br>
-<h2>My Suggested Artists</h2>
-<table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
-    <thead>
-        <tr style="background: #eee;">
-            <th style="padding: 10px;">Artist Name</th>
-            <th style="padding: 10px;">Status</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for artist in my_artists %}
-            <tr>
-                <td style="padding: 10px;">{{ artist.name }}</td>
-                <td style="padding: 10px;">
-                    {% if artist.is_approved %}
-                        <span style="color: green;">✅ Approved</span>
-                    {% else %}
-                        <span style="color: orange;">⏳ Pending</span>
-                    {% endif %}
-                </td>
-                <td style="padding: 10px;">
-                    {% if not artist.is_approved %}
-                        <a href="{% url 'artist-edit' artist.pk %}" style="color: blue;">Edit Name</a>
-                    {% else %}
-                        <span style="color: #888;">Locked</span>
-                    {% endif %}
-                </td>
-            </tr>
-        {% empty %}
-            <tr><td colspan="3" style="padding: 10px;">No artists suggested yet.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </thead>
+            <tbody>
+                {% for artist in my_artists %}
+                    <tr>
+                        <td><strong>{{ artist.name }}</strong></td>
+                        <td>
+                            {% if artist.is_approved %}
+                                <span style="color: #2ecc71;">✅ Approved</span>
+                            {% else %}
+                                <span style="color: #f1c40f;">⏳ Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="action-links">
+                            {% if not artist.is_approved %}
+                                <a href="{% url 'artist-edit' artist.pk %}" style="color: var(--accent-color);">Edit Name</a>
+                            {% else %}
+                                <span style="color: #555;">Locked</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" style="padding: 20px; text-align: center; color: var(--text-muted);">
+                            No artists suggested yet.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

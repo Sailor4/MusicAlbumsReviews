@@ -167,3 +167,46 @@ strong {
     box-shadow: 0 6px 20px rgba(29, 185, 84, 0.6);
     background-color: #1ed760;
 }
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #1a1a1a; /* Малко по-светло от основния фон */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.custom-table th {
+    background-color: #333;
+    color: var(--primary-color);
+    padding: 15px;
+    text-align: left;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.custom-table td {
+    padding: 15px;
+    border-bottom: 1px solid #222;
+    color: var(--text-main);
+}
+
+.custom-table tr:hover {
+    background-color: #252525;
+}
+
+.action-links a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+}
+
+.action-links a:hover {
+    opacity: 0.7;
+}
+
+.view-link {
+    color: var(--primary-color);
+}
