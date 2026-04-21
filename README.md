@@ -39,7 +39,7 @@ Follow these steps to get the project running locally:
    ```
 6. **Seed the Database provided:
     ```bash
-    python seed_db.py
+    python seed_data.py
     ```
 7. **Start the server:
     ```bash
