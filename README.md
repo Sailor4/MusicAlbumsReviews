@@ -37,12 +37,16 @@ Follow these steps to get the project running locally:
     ```bash
    python manage.py migrate
    ```
-6. **Seed the Database provided:
+6. **Create Superuser:
+    ```bash
+    python manage.py createsuperuser
+    ```
+7. **Seed the Database provided:
     ```bash
     python seed_data.py
     ```
-7. **Start the server:
+8. **Start the server:
     ```bash
     python manage.py runserver
     ```
-8. ** Access the site: Open http://127.0.0.1:8000/ in your browser.
+9. ** Access the site: Open http://127.0.0.1:8000/ in your browser.
